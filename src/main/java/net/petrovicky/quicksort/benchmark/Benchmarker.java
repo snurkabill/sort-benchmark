@@ -50,13 +50,13 @@ public class Benchmarker {
             Benchmarker.LOGGER.debug("Benchmark iteration {}", i);
             final Integer[] toSort = Benchmarker.getAssortedList(numValues);
             for (final BenchmarkTask<Integer> task : this.tasks) {
-                Benchmarker.LOGGER.trace("Preparing data for task '{}' in iteration {}", task, i);
+                Benchmarker.LOGGER.trace("[{}] Preparing data for task '{}'", i, task);
                 final Integer[] copy = Arrays.copyOf(toSort, toSort.length);
                 if (!results.containsKey(task)) {
                     results.put(task, new ArrayList<Long>());
                 }
                 System.gc(); // better now than during the task
-                Benchmarker.LOGGER.trace("Running task '{}' in iteration {}", task, i);
+                Benchmarker.LOGGER.trace("[{}] Running task '{}'", i, task);
                 results.get(task).add(this.timeTask(task, copy));
             }
         }
@@ -86,7 +86,7 @@ public class Benchmarker {
             Benchmarker.LOGGER.debug("Warm-up iteration {}", i);
             final Integer[] toSort = Benchmarker.getAssortedList(Benchmarker.NUM_VALUES_WARMUP);
             for (final BenchmarkTask<Integer> task : this.tasks) {
-                Benchmarker.LOGGER.trace("Warming up task '{}' in iteration {}", task, i);
+                Benchmarker.LOGGER.trace("[{}] Warming up task '{}'", i, task);
                 final Integer[] input = Arrays.copyOf(toSort, toSort.length);
                 task.run(input);
             }
