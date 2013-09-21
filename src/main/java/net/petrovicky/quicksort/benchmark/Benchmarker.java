@@ -47,16 +47,16 @@ public class Benchmarker {
         Benchmarker.LOGGER.info("Benchmarking arrays of {} values in {} iterations.", numValues, numIterations);
         final Map<BenchmarkTask<Integer>, List<Long>> results = new HashMap<>();
         for (int i = 1; i <= numIterations; i++) {
-            Benchmarker.LOGGER.debug("Benchmark iteration {}", i);
+            Benchmarker.LOGGER.debug("[{}] Benchmark iteration {}", numValues, i);
             final Integer[] toSort = Benchmarker.getAssortedList(numValues);
             for (final BenchmarkTask<Integer> task : this.tasks) {
-                Benchmarker.LOGGER.trace("[{}] Preparing data for task '{}'", i, task);
+                Benchmarker.LOGGER.trace("[{}x{}] Preparing data for task '{}'", numValues, i, task);
                 final Integer[] copy = Arrays.copyOf(toSort, toSort.length);
                 if (!results.containsKey(task)) {
                     results.put(task, new ArrayList<Long>());
                 }
                 System.gc(); // better now than during the task
-                Benchmarker.LOGGER.trace("[{}] Running task '{}'", i, task);
+                Benchmarker.LOGGER.trace("[{}x{}] Running task '{}'", numValues, i, task);
                 results.get(task).add(this.timeTask(task, copy));
             }
         }
