@@ -4,8 +4,8 @@ import java.util.concurrent.ForkJoinTask;
 import java.util.concurrent.RecursiveTask;
 
 /**
- * Parallel quicksort implementation, leveraging JDK 7's fork-join implementation. When the range to be sorted drops
- * under {@link #CONCURRENCY_THRESHOLD}, all the recursion happens in the same thread.
+ * Parallel quicksort implementation, leveraging JDK 7's fork-join implementation. When the length of the unsorted range
+ * drops under {@link #CONCURRENCY_THRESHOLD}, the algorithm switches to {@link Quicksort}.
  * 
  * @param <T>
  *            Type of the values that are being sorted.
@@ -43,12 +43,12 @@ public final class ParallelQuicksort<T extends Comparable<T>> extends RecursiveT
         }
         final int pivotIndex = this.partitioner.execute(this.input, this.left, this.right);
         if ((this.right - this.left) < ParallelQuicksort.CONCURRENCY_THRESHOLD) {
-            new ParallelQuicksort<T>(this.partitioner, this.input, this.left, pivotIndex - 1).compute();
-            new ParallelQuicksort<T>(this.partitioner, this.input, pivotIndex + 1, this.right).compute();
+            final Quicksort<T> serial = new Quicksort<>(this.partitioner);
+            serial.sort(this.input, this.left, pivotIndex - 1);
+            serial.sort(this.input, pivotIndex + 1, this.right);
         } else {
             final ForkJoinTask<Boolean> left = new ParallelQuicksort<T>(this.partitioner, this.input, this.left, pivotIndex - 1).fork();
-            final ForkJoinTask<Boolean> right = new ParallelQuicksort<T>(this.partitioner, this.input, pivotIndex + 1, this.right).fork();
-            right.join();
+            new ParallelQuicksort<T>(this.partitioner, this.input, pivotIndex + 1, this.right).fork().join();
             left.join();
         }
         return true;
