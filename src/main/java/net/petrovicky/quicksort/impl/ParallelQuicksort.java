@@ -13,6 +13,28 @@ import java.util.concurrent.RecursiveTask;
 public final class ParallelQuicksort<T extends Comparable<T>> extends RecursiveTask<Boolean> {
 
     /**
+     * The sole purpose of this class is to prevent {@link #ParallelQuicksort} from referencing two objects. Since there
+     * will be millions of those objects in memory, saving even one reference in each will be significant.
+     * 
+     * This class is static for that same reason.
+     * 
+     */
+    private static final class Holder {
+
+        @SuppressWarnings("rawtypes")
+        private final Comparable[] input;
+        @SuppressWarnings("rawtypes")
+        private final PartitioningStrategy strategy;
+
+        @SuppressWarnings("rawtypes")
+        public Holder(final Comparable[] input, final PartitioningStrategy strategy) {
+            this.input = input;
+            this.strategy = strategy;
+        }
+
+    }
+
+    /**
      * When the range is shorter than this number, we don't use concurrency anymore.
      */
     private static final int CONCURRENCY_THRESHOLD = 1000;
@@ -20,35 +42,36 @@ public final class ParallelQuicksort<T extends Comparable<T>> extends RecursiveT
      * 
      */
     private static final long serialVersionUID = -5434239700032599439L;
-    private final T[] input;
+    private final Holder holder;
     private final int left, right;
-    private final PartitioningStrategy<T> partitioner;
 
-    public ParallelQuicksort(final PartitioningStrategy<T> partitioner, final T[] input) {
-        this(partitioner, input, 0, input.length - 1);
-    }
-
-    protected ParallelQuicksort(final PartitioningStrategy<T> partitioner, final T[] input, final int left, final int right) {
+    protected ParallelQuicksort(final Holder holder, final int left, final int right) {
         super();
-        this.partitioner = partitioner;
-        this.input = input;
+        this.holder = holder;
         this.left = left;
         this.right = right;
     }
 
+    public ParallelQuicksort(final PartitioningStrategy<T> partitioner, final T[] input) {
+        this(new Holder(input, partitioner), 0, input.length - 1);
+    }
+
+    @SuppressWarnings("unchecked")
     @Override
     protected Boolean compute() {
         if (this.left >= this.right) {
             return true;
         }
-        final int pivotIndex = this.partitioner.execute(this.input, this.left, this.right);
+        final PartitioningStrategy<T> partitioner = this.holder.strategy;
+        final T[] input = (T[]) this.holder.input; // we know this is safe, since we assign it in the constructor
+        final int pivotIndex = partitioner.execute(input, this.left, this.right);
         if ((this.right - this.left) < ParallelQuicksort.CONCURRENCY_THRESHOLD) {
-            final Quicksort<T> serial = new Quicksort<>(this.partitioner);
-            serial.sort(this.input, this.left, pivotIndex - 1);
-            serial.sort(this.input, pivotIndex + 1, this.right);
+            final Quicksort<T> serial = new Quicksort<>(partitioner);
+            serial.sort(input, this.left, pivotIndex - 1);
+            serial.sort(input, pivotIndex + 1, this.right);
         } else {
-            final ForkJoinTask<Boolean> left = new ParallelQuicksort<T>(this.partitioner, this.input, this.left, pivotIndex - 1).fork();
-            new ParallelQuicksort<T>(this.partitioner, this.input, pivotIndex + 1, this.right).fork().join();
+            final ForkJoinTask<Boolean> left = new ParallelQuicksort<T>(this.holder, this.left, pivotIndex - 1).fork();
+            new ParallelQuicksort<T>(this.holder, pivotIndex + 1, this.right).fork().join();
             left.join();
         }
         return true;
