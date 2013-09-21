@@ -59,13 +59,14 @@ public final class ParallelQuicksort<T extends Comparable<T>> extends RecursiveT
     @SuppressWarnings("unchecked")
     @Override
     protected Boolean compute() {
-        if (this.left >= this.right) {
+        final int size = this.right - this.left;
+        if (size < 1) {
             return true;
         }
         final PartitioningStrategy<T> partitioner = this.holder.strategy;
         final T[] input = (T[]) this.holder.input; // we know this is safe, since we assign it in the constructor
         final int pivotIndex = partitioner.execute(input, this.left, this.right);
-        if ((this.right - this.left) < ParallelQuicksort.CONCURRENCY_THRESHOLD) {
+        if (size < ParallelQuicksort.CONCURRENCY_THRESHOLD) {
             final Quicksort<T> serial = new Quicksort<>(partitioner);
             serial.sort(input, this.left, pivotIndex - 1);
             serial.sort(input, pivotIndex + 1, this.right);
