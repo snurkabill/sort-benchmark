@@ -59,7 +59,7 @@ public final class ParallelQuicksort<T extends Comparable<T>> extends RecursiveT
     @SuppressWarnings("unchecked")
     @Override
     protected Boolean compute() {
-        final int size = this.right - this.left;
+        final int size = this.right - this.left + 1;
         if (size < 1) {
             return true;
         }
