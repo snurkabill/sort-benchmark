@@ -59,7 +59,7 @@ public class Main {
         b.warmup();
         final Map<String, Map<Integer, Integer>> aggregate = new HashMap<>();
         // run those tasks on increasingly long lists; report results
-        for (int size = 100; size <= Main.MAX_LIST_SIZE; size *= 10) {
+        for (int size = 1000; size <= Main.MAX_LIST_SIZE; size *= 10) {
             // run benchmark on a particular list size
             final Map<String, Map<Integer, Integer>> intermediate = Main.processBenchmark(b, size);
             // format results of that benchmark so that they fit in the chart later
