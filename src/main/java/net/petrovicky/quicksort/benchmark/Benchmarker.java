@@ -22,6 +22,16 @@ public class Benchmarker {
 
     private static final int WARMUP_RUNS = 30;
 
+    private static void assertSorted(final BenchmarkTask<Integer> task, final Integer[] input) {
+        Integer previous = Integer.MIN_VALUE;
+        for (final Integer i : input) {
+            if (i < previous) {
+                throw new IllegalArgumentException("Unsorted array produced by " + task);
+            }
+            previous = i;
+        }
+    }
+
     /**
      * Get a list of random values in a random order.
      * 
@@ -30,7 +40,7 @@ public class Benchmarker {
      * @return The list.
      */
     private static Integer[] getAssortedList(final int size) {
-        final int maxNum = (int)Math.round(size * 0.9); // some numbers will repeat
+        final int maxNum = (int) Math.round(size * 0.9); // some numbers will repeat
         final Integer[] toSort = new Integer[size];
         for (int i = 0; i < size; i++) {
             toSort[i] = Benchmarker.RANDOM.nextInt(maxNum) - (maxNum / 2); // we also want some negative numbers
@@ -90,6 +100,8 @@ public class Benchmarker {
                 Benchmarker.LOGGER.trace("[{}] Warming up task '{}'", i, task);
                 final Integer[] input = Arrays.copyOf(toSort, toSort.length);
                 task.run(input);
+                Benchmarker.LOGGER.trace("[{}] Validating result of task '{}'", i, task);
+                Benchmarker.assertSorted(task, input);
             }
         }
     }
