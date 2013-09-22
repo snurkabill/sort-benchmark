@@ -30,9 +30,10 @@ public class Benchmarker {
      * @return The list.
      */
     private static Integer[] getAssortedList(final int size) {
+        final int maxNum = (int)Math.round(size * 0.9); // some numbers will repeat
         final Integer[] toSort = new Integer[size];
         for (int i = 0; i < size; i++) {
-            toSort[i] = Benchmarker.RANDOM.nextInt(Integer.MAX_VALUE);
+            toSort[i] = Benchmarker.RANDOM.nextInt(maxNum);
         }
         return toSort;
     }
