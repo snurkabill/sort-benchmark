@@ -62,19 +62,14 @@ public final class ParallelQuicksort<T extends Comparable<T>> extends RecursiveT
         final int size = this.right - this.left + 1;
         if (size < 1) {
             return true;
+        } else if (size < ParallelQuicksort.CONCURRENCY_THRESHOLD) {
+            new Quicksort<T>(this.holder.strategy).sort((T[]) this.holder.input, this.left, this.right);
+            return true;
         }
-        final PartitioningStrategy<T> partitioner = this.holder.strategy;
-        final T[] input = (T[]) this.holder.input; // we know this is safe, since we assign it in the constructor
-        final int pivotIndex = partitioner.execute(input, this.left, this.right);
-        if (size < ParallelQuicksort.CONCURRENCY_THRESHOLD) {
-            final Quicksort<T> serial = new Quicksort<>(partitioner);
-            serial.sort(input, this.left, pivotIndex - 1);
-            serial.sort(input, pivotIndex + 1, this.right);
-        } else {
-            final ForkJoinTask<Boolean> left = new ParallelQuicksort<T>(this.holder, this.left, pivotIndex - 1).fork();
-            new ParallelQuicksort<T>(this.holder, pivotIndex + 1, this.right).fork().join();
-            left.join();
-        }
+        final int pivotIndex = this.holder.strategy.execute(this.holder.input, this.left, this.right);
+        final ForkJoinTask<Boolean> left = new ParallelQuicksort<T>(this.holder, this.left, pivotIndex - 1).fork();
+        new ParallelQuicksort<T>(this.holder, pivotIndex + 1, this.right).fork().join();
+        left.join();
         return true;
     }
 
