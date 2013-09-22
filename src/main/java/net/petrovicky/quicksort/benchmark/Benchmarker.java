@@ -33,7 +33,7 @@ public class Benchmarker {
         final int maxNum = (int)Math.round(size * 0.9); // some numbers will repeat
         final Integer[] toSort = new Integer[size];
         for (int i = 0; i < size; i++) {
-            toSort[i] = Benchmarker.RANDOM.nextInt(maxNum);
+            toSort[i] = Benchmarker.RANDOM.nextInt(maxNum) - (maxNum / 2); // we also want some negative numbers
         }
         return toSort;
     }
