@@ -40,7 +40,7 @@ public class Benchmarker {
      * @return The list.
      */
     private static Integer[] getAssortedList(final int size) {
-        final int maxNum = (int) Math.round(size * 1.5); // some numbers are likely to repeat
+        final int maxNum = (int) Math.round(size * 1.1); // some numbers are likely to repeat
         final Integer[] toSort = new Integer[size];
         for (int i = 0; i < size; i++) {
             toSort[i] = Benchmarker.RANDOM.nextInt(maxNum) - (maxNum / 2); // we also want some negative numbers
