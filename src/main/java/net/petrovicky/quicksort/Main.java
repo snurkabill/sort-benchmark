@@ -12,9 +12,11 @@ import java.util.TreeMap;
 
 import net.petrovicky.quicksort.benchmark.BenchmarkTask;
 import net.petrovicky.quicksort.benchmark.Benchmarker;
-import net.petrovicky.quicksort.benchmark.MultiThreadedMiddlePartitionedBenchmarkTask;
+import net.petrovicky.quicksort.benchmark.ParallelIntrosortMiddlePartitionedBenchmarkTask;
+import net.petrovicky.quicksort.benchmark.ParallelQuicksortMiddlePartitionedBenchmarkTask;
 import net.petrovicky.quicksort.benchmark.NativeBenchmarkTask;
-import net.petrovicky.quicksort.benchmark.SingleThreadedMiddlePartitionedBenchmarkTask;
+import net.petrovicky.quicksort.benchmark.SimpleIntrosortMiddlePartitionedBenchmarkTask;
+import net.petrovicky.quicksort.benchmark.SimpleQuicksortMiddlePartitionedBenchmarkTask;
 
 /**
  * This app benchmarks single-threaded and multi-threaded quicksort implementations under various conditions.
@@ -45,10 +47,12 @@ public class Main {
         // assemble tasks
         final List<BenchmarkTask<Integer>> tasks = new ArrayList<>();
         tasks.add(new NativeBenchmarkTask<Integer>());
-        tasks.add(new SingleThreadedMiddlePartitionedBenchmarkTask<Integer>());
+        tasks.add(new SimpleQuicksortMiddlePartitionedBenchmarkTask<Integer>());
+        tasks.add(new SimpleIntrosortMiddlePartitionedBenchmarkTask<Integer>());
         for (int power = 0; power < 6; power++) {
             final int numThreads = (int) Math.pow(2, power);
-            tasks.add(new MultiThreadedMiddlePartitionedBenchmarkTask<Integer>(numThreads));
+            tasks.add(new ParallelQuicksortMiddlePartitionedBenchmarkTask<Integer>(numThreads));
+            tasks.add(new ParallelIntrosortMiddlePartitionedBenchmarkTask<Integer>(numThreads));
         }
         // prepare the benchmarker and warm up the JVM, so that we have consistent results
         final Benchmarker b = new Benchmarker(tasks);

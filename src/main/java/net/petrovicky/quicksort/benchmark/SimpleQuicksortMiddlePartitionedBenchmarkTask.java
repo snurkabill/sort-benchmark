@@ -2,9 +2,9 @@ package net.petrovicky.quicksort.benchmark;
 
 import net.petrovicky.quicksort.impl.Quicksort;
 
-public class SingleThreadedMiddlePartitionedBenchmarkTask<T extends Comparable<T>> extends MiddlePartitionedBenchmarkTask<T> {
+public class SimpleQuicksortMiddlePartitionedBenchmarkTask<T extends Comparable<T>> extends MiddlePartitionedBenchmarkTask<T> {
 
-    public SingleThreadedMiddlePartitionedBenchmarkTask() {
+    public SimpleQuicksortMiddlePartitionedBenchmarkTask() {
         super();
     }
 
@@ -15,7 +15,7 @@ public class SingleThreadedMiddlePartitionedBenchmarkTask<T extends Comparable<T
 
     @Override
     public String toString() {
-        return "Single middle pivot";
+        return "Single quick middle pivot";
     }
 
 }
