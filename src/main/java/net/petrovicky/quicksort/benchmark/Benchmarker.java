@@ -33,17 +33,29 @@ public class Benchmarker {
     }
 
     /**
-     * Get a list of random values in a random order.
+     * Get an array of random values in a random order.
      * 
      * @param size
      *            Target .size() of the list.
      * @return The list.
      */
     private static Integer[] getAssortedList(final int size) {
+        final int[] streaks = new int[]{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 4, 8, 16};
         final int maxNum = (int) Math.round(size * 1.1); // some numbers are likely to repeat
         final Integer[] toSort = new Integer[size];
-        for (int i = 0; i < size; i++) {
-            toSort[i] = Benchmarker.RANDOM.nextInt(maxNum) - (maxNum / 2); // we also want some negative numbers
+        int filled = 0;
+        while (filled < size) {
+            // we also want some negative numbers
+            final int startingNumber = Benchmarker.RANDOM.nextInt(maxNum) - (maxNum / 2);
+            // how many items already sorted there will be
+            final int instances = streaks[Benchmarker.RANDOM.nextInt(streaks.length)];
+            for (int i = 0; i < instances; i++) {
+                toSort[filled] = startingNumber + i;
+                filled++;
+                if (filled >= size) { // don't allow the array to be over-filled
+                    break;
+                }
+            }
         }
         return toSort;
     }
