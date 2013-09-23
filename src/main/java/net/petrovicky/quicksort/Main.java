@@ -23,7 +23,7 @@ import net.petrovicky.quicksort.benchmark.SimpleQuicksortMiddlePartitionedBenchm
  */
 public class Main {
 
-    private static final int MAX_LIST_SIZE = 10 * 1000 * 1000; // more will not fit into -Xmx2048m
+    private static final int MAX_LIST_SIZE = 100 * 1000 * 1000; // more will not fit into -Xmx2048m
 
     /**
      * Find the median value in a list of values.
