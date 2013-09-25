@@ -39,9 +39,6 @@ public class ParallelMergeSort<T extends Comparable<T>> extends RecursiveTask<Bo
 		
 		final int size = this.right - this.left + 1;
 		
-		
-		System.out.println(size);
-		
 		if(size < 1) {
 			return true;
 		} else if (size < ParallelMergeSort.CONCURRENCY_THRESHOLD) {

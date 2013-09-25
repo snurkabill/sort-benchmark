@@ -6,7 +6,7 @@ import net.petrovicky.quicksort.impl.ParallelMergeSort;
 public class ParallelMergeSortMiddlePartitionedBenchmarkTask<T extends Comparable<T>> extends MiddlePartitionedBenchmarkTask<T> {
 	
 	private final ForkJoinPool pool;
-    private final int threads;
+	private final int threads;
 	
 	public ParallelMergeSortMiddlePartitionedBenchmarkTask(final int numThreads) {
         super();
