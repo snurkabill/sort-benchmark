@@ -17,13 +17,15 @@ import net.petrovicky.quicksort.benchmark.ParallelQuicksortMiddlePartitionedBenc
 import net.petrovicky.quicksort.benchmark.NativeBenchmarkTask;
 import net.petrovicky.quicksort.benchmark.SimpleIntrosortMiddlePartitionedBenchmarkTask;
 import net.petrovicky.quicksort.benchmark.SimpleQuicksortMiddlePartitionedBenchmarkTask;
+import net.petrovicky.quicksort.benchmark.ParallelMergeSortMiddlePartitionedBenchmarkTask;
+import net.petrovicky.quicksort.benchmark.SimpleMergeSortMiddlePartitionedBenchmarkTask;
 
 /**
  * This app benchmarks single-threaded and multi-threaded quicksort implementations under various conditions.
  */
 public class Main {
 
-    private static final int MAX_LIST_SIZE = 100 * 1000 * 1000; // more will not fit into -Xmx2048m
+    private static final int MAX_LIST_SIZE = 10 * 1000 * 1000; // more will not fit into -Xmx2048m
 
     /**
      * Find the median value in a list of values.
@@ -49,10 +51,12 @@ public class Main {
         tasks.add(new NativeBenchmarkTask<Integer>());
         tasks.add(new SimpleQuicksortMiddlePartitionedBenchmarkTask<Integer>());
         tasks.add(new SimpleIntrosortMiddlePartitionedBenchmarkTask<Integer>());
-        for (int power = 0; power < 6; power++) {
+	tasks.add(new SimpleMergeSortMiddlePartitionedBenchmarkTask<Integer>());
+	for (int power = 0; power < 6; power++) {
             final int numThreads = (int) Math.pow(2, power);
             tasks.add(new ParallelQuicksortMiddlePartitionedBenchmarkTask<Integer>(numThreads));
             tasks.add(new ParallelIntrosortMiddlePartitionedBenchmarkTask<Integer>(numThreads));
+		tasks.add(new ParallelMergeSortMiddlePartitionedBenchmarkTask<Integer>(numThreads));
         }
         // prepare the benchmarker and warm up the JVM, so that we have consistent results
         final Benchmarker b = new Benchmarker(tasks);
