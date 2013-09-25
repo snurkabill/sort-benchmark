@@ -23,11 +23,11 @@ public class ParallelMergeSort<T extends Comparable<T>> extends RecursiveTask<Bo
 	private final Holder holder;
 	private final int left, right;
 	
-	ParallelMergeSort(final PartitioningStrategy<T> strategy, final T[] array) {	
+	public ParallelMergeSort(final PartitioningStrategy<T> strategy, final T[] array) {	
 		this(new Holder(array, strategy), 0, array.length - 1);
 	}
 	
-	ParallelMergeSort(final Holder holder, final int left, final int right ) {
+	protected ParallelMergeSort(final Holder holder, final int left, final int right ) {
 		super();
 		this.holder = holder;
 		this.left = left;
