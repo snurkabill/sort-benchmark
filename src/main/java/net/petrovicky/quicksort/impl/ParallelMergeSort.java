@@ -18,7 +18,7 @@ public class ParallelMergeSort<T extends Comparable<T>> extends RecursiveTask<Bo
 		}
 	}
 	
-	private static final int CONCURRENCY_THRESHOLD = 1000;
+	private static final int CONCURRENCY_THRESHOLD = 5000;
 	
 	private final Holder holder;
 	private final int left, right;
@@ -59,10 +59,9 @@ public class ParallelMergeSort<T extends Comparable<T>> extends RecursiveTask<Bo
 			final int pivot = (left + right) / 2;
 			
 			ForkJoinTask<Boolean> leftTask = new ParallelMergeSort<T>(this.holder, left, pivot).fork();
-			ForkJoinTask<Boolean> rightTask = new ParallelMergeSort<T>(this.holder, pivot + 1, right).fork();
+			new ParallelMergeSort<T>(this.holder, pivot + 1, right).fork().join();
 			
 			leftTask.join();
-			rightTask.join();
 			
 			merge(pivot);
 			
