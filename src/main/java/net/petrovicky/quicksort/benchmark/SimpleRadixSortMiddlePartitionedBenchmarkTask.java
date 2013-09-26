@@ -10,7 +10,7 @@ public class SimpleRadixSortMiddlePartitionedBenchmarkTask<T extends Comparable<
 	
 	@Override
     public void run(final T[] input) {
-		new RadixSort(10).sort((Integer[])input);
+		new RadixSort(2).sort((Integer[])input);
 	}
 
     @Override
