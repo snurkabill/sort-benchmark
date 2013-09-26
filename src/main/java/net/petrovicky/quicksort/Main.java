@@ -19,6 +19,8 @@ import net.petrovicky.quicksort.benchmark.SimpleIntrosortMiddlePartitionedBenchm
 import net.petrovicky.quicksort.benchmark.SimpleQuicksortMiddlePartitionedBenchmarkTask;
 import net.petrovicky.quicksort.benchmark.ParallelMergeSortMiddlePartitionedBenchmarkTask;
 import net.petrovicky.quicksort.benchmark.SimpleMergeSortMiddlePartitionedBenchmarkTask;
+import net.petrovicky.quicksort.benchmark.SimpleRadixSortMiddlePartitionedBenchmarkTask;
+
 
 /**
  * This app benchmarks single-threaded and multi-threaded quicksort implementations under various conditions.
@@ -52,6 +54,7 @@ public class Main {
         tasks.add(new SimpleQuicksortMiddlePartitionedBenchmarkTask<Integer>());
         tasks.add(new SimpleIntrosortMiddlePartitionedBenchmarkTask<Integer>());
 	tasks.add(new SimpleMergeSortMiddlePartitionedBenchmarkTask<Integer>());
+	tasks.add(new SimpleRadixSortMiddlePartitionedBenchmarkTask<Integer>());
 	for (int power = 0; power < 6; power++) {
             final int numThreads = (int) Math.pow(2, power);
             tasks.add(new ParallelQuicksortMiddlePartitionedBenchmarkTask<Integer>(numThreads));
